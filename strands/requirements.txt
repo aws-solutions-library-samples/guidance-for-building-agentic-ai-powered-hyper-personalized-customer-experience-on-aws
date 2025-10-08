@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic[email]
+websockets
+boto3
+botocore
+opensearch-py
+requests-aws4auth
+python-multipart
+strands-agents
+strands-agents-tools
+python-dotenv
+tqdm

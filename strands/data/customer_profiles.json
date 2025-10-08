@@ -1,0 +1,723 @@
+{
+  "customer_profiles": {
+    "profile_info": {
+      "database_name": "Healthcare Customer Profiles",
+      "version": "1.0",
+      "created_date": "2025-08-06",
+      "total_customers": 3,
+      "data_includes": ["Demographics", "Health Metrics", "Bloodwork", "Body Composition", "Order History", "Preferences"]
+    },
+    "customers": [
+      {
+        "customer_id": "CUST001",
+        "personal_info": {
+          "name": "Marcus Lee",
+          "gender": "Male",
+          "age": 27,
+          "date_of_birth": "1997-11-15",
+          "email": "<email>@email.com",
+          "phone": "<phone_number>",
+          "address": {
+            "street": "<address>",
+            "city": "San Francisco",
+            "state": "CA",
+            "zip_code": "94102",
+            "country": "USA"
+          },
+          "occupation": "Software Engineer",
+          "lifestyle": "Active",
+          "fitness_level": "High",
+          "dietary_preferences": ["Protein-focused", "Low-carb friendly"],
+          "allergies": ["None known"],
+          "medications": ["None"],
+          "health_goals": ["Muscle building", "Performance optimization", "Stress management"]
+        },
+        "body_composition": {
+          "height": "5'10\"",
+          "height_cm": 178,
+          "weight": "165 lbs",
+          "weight_kg": 75,
+          "bmi": 23.7,
+          "body_fat_percentage": 12.5,
+          "muscle_mass_percentage": 45.2,
+          "bone_density": "Above average",
+          "metabolic_rate": 1850,
+          "waist_circumference": "32 inches",
+          "blood_pressure": "118/75 mmHg",
+          "resting_heart_rate": 58,
+          "last_measured": "2025-07-20"
+        },
+        "bloodwork_data": {
+          "test_date": "2025-06-15",
+          "lab_provider": "LabCorp",
+          "complete_blood_count": {
+            "white_blood_cells": "6.8 K/uL",
+            "red_blood_cells": "4.9 M/uL",
+            "hemoglobin": "15.2 g/dL",
+            "hematocrit": "44.5%",
+            "platelets": "285 K/uL"
+          },
+          "comprehensive_metabolic_panel": {
+            "glucose_fasting": "88 mg/dL",
+            "sodium": "140 mEq/L",
+            "potassium": "4.2 mEq/L",
+            "chloride": "102 mEq/L",
+            "co2": "24 mEq/L",
+            "bun": "16 mg/dL",
+            "creatinine": "1.0 mg/dL",
+            "egfr": ">60 mL/min/1.73m²"
+          },
+          "lipid_panel": {
+            "total_cholesterol": "175 mg/dL",
+            "ldl_cholesterol": "95 mg/dL",
+            "hdl_cholesterol": "58 mg/dL",
+            "triglycerides": "110 mg/dL"
+          },
+          "vitamins_minerals": {
+            "vitamin_d": "32 ng/mL",
+            "vitamin_b12": "450 pg/mL",
+            "folate": "12 ng/mL",
+            "iron": "95 mcg/dL",
+            "ferritin": "125 ng/mL",
+            "magnesium": "2.1 mg/dL",
+            "zinc": "85 mcg/dL"
+          },
+          "hormones": {
+            "testosterone_total": "650 ng/dL",
+            "testosterone_free": "18.5 pg/mL",
+            "cortisol_am": "12 mcg/dL",
+            "thyroid_tsh": "2.1 mIU/L",
+            "thyroid_t4": "8.5 mcg/dL"
+          },
+          "inflammatory_markers": {
+            "c_reactive_protein": "0.8 mg/L",
+            "esr": "8 mm/hr"
+          }
+        },
+        "order_history": [
+          {
+            "order_id": "ORD-2025-001",
+            "order_date": "2025-07-28",
+            "total_amount": 89.93,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT001",
+                "product_name": "Premium Vitamin D3 5000 IU",
+                "quantity": 1,
+                "price": 24.99
+              },
+              {
+                "product_id": "VIT003",
+                "product_name": "Omega-3 Fish Oil 1000mg",
+                "quantity": 1,
+                "price": 28.50
+              },
+              {
+                "product_id": "VIT005",
+                "product_name": "Magnesium Glycinate 400mg",
+                "quantity": 1,
+                "price": 21.95
+              },
+              {
+                "product_id": "HERB001",
+                "product_name": "Turmeric Curcumin 1500mg",
+                "quantity": 1,
+                "price": 26.95
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 4567"
+          },
+          {
+            "order_id": "ORD-2025-002",
+            "order_date": "2025-06-15",
+            "total_amount": 45.94,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT007",
+                "product_name": "Zinc 50mg Immune Support",
+                "quantity": 2,
+                "price": 13.99
+              },
+              {
+                "product_id": "OTC001",
+                "product_name": "Ibuprofen 200mg Tablets",
+                "quantity": 1,
+                "price": 12.99
+              },
+              {
+                "product_id": "CARE001",
+                "product_name": "Hand Sanitizer Gel 70% Alcohol",
+                "quantity": 1,
+                "price": 4.99
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-003",
+            "order_date": "2025-05-02",
+            "total_amount": 23.99,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "HERB002",
+                "product_name": "Ashwagandha Root Extract 600mg",
+                "quantity": 1,
+                "price": 23.99
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-015",
+            "order_date": "2025-04-20",
+            "total_amount": 127.92,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT011",
+                "product_name": "CoQ10 Ubiquinol 100mg",
+                "quantity": 1,
+                "price": 44.99
+              },
+              {
+                "product_id": "HERB005",
+                "product_name": "Ashwagandha Root Extract 600mg",
+                "quantity": 1,
+                "price": 29.99
+              },
+              {
+                "product_id": "OTC006",
+                "product_name": "Probiotic 50 Billion CFU",
+                "quantity": 1,
+                "price": 34.95
+              },
+              {
+                "product_id": "VIT008",
+                "product_name": "Vitamin B12 Methylcobalamin 1000mcg",
+                "quantity": 1,
+                "price": 19.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 4567"
+          },
+          {
+            "order_id": "ORD-2025-025",
+            "order_date": "2025-03-10",
+            "total_amount": 67.97,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "OTC007",
+                "product_name": "Electrolyte Powder Packets",
+                "quantity": 2,
+                "price": 19.99
+              },
+              {
+                "product_id": "OTC008",
+                "product_name": "Digestive Enzymes Complex",
+                "quantity": 1,
+                "price": 27.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 4567"
+          },
+          {
+            "order_id": "ORD-2025-035",
+            "order_date": "2025-02-05",
+            "total_amount": 79.97,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "CARE004",
+                "product_name": "Pulse Oximeter Fingertip",
+                "quantity": 1,
+                "price": 29.99
+              },
+              {
+                "product_id": "HERB007",
+                "product_name": "Rhodiola Rosea Extract 500mg",
+                "quantity": 1,
+                "price": 26.99
+              },
+              {
+                "product_id": "VIT009",
+                "product_name": "Iron Bisglycinate 25mg",
+                "quantity": 1,
+                "price": 22.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 4567"
+          }
+        ],
+        "purchase_patterns": {
+          "total_orders": 6,
+          "total_spent": 435.72,
+          "average_order_value": 72.62,
+          "favorite_categories": ["Vitamin Supplements", "Herbal Supplements", "Over-the-Counter Medicines"],
+          "purchase_frequency": "Every 4-6 weeks",
+          "preferred_brands": ["WellnessPlus", "HeartHealth Plus", "AdaptaZen", "DigestWell"],
+          "seasonal_trends": "Increases supplement purchases in winter months, adds fitness-related products in spring"
+        },
+        "health_insights": {
+          "risk_factors": ["Moderate stress levels from work"],
+          "recommendations": ["Continue current supplement regimen", "Monitor vitamin D levels", "Consider stress management techniques"],
+          "health_score": 85,
+          "last_health_assessment": "2025-07-20"
+        }
+      },
+      {
+        "customer_id": "CUST002",
+        "personal_info": {
+          "name": "Rachel Alvarez",
+          "gender": "Female",
+          "age": 45,
+          "date_of_birth": "1979-03-22",
+          "email": "<email>@email.com",
+          "phone": "<phone_number>",
+          "address": {
+            "street": "<address>",
+            "city": "Austin",
+            "state": "TX",
+            "zip_code": "78701",
+            "country": "USA"
+          },
+          "occupation": "Marketing Director",
+          "lifestyle": "Moderately Active",
+          "fitness_level": "Medium",
+          "dietary_preferences": ["Mediterranean diet", "Organic when possible"],
+          "allergies": ["Shellfish"],
+          "medications": ["Levothyroxine 75mcg (hypothyroidism)"],
+          "health_goals": ["Hormone balance", "Skin health", "Energy improvement", "Bone health"]
+        },
+        "body_composition": {
+          "height": "5'6\"",
+          "height_cm": 168,
+          "weight": "142 lbs",
+          "weight_kg": 64.5,
+          "bmi": 22.9,
+          "body_fat_percentage": 28.5,
+          "muscle_mass_percentage": 35.8,
+          "bone_density": "Normal",
+          "metabolic_rate": 1420,
+          "waist_circumference": "29 inches",
+          "blood_pressure": "125/82 mmHg",
+          "resting_heart_rate": 68,
+          "last_measured": "2025-07-15"
+        },
+        "bloodwork_data": {
+          "test_date": "2025-07-01",
+          "lab_provider": "Quest Diagnostics",
+          "complete_blood_count": {
+            "white_blood_cells": "7.2 K/uL",
+            "red_blood_cells": "4.3 M/uL",
+            "hemoglobin": "12.8 g/dL",
+            "hematocrit": "38.5%",
+            "platelets": "310 K/uL"
+          },
+          "comprehensive_metabolic_panel": {
+            "glucose_fasting": "95 mg/dL",
+            "sodium": "138 mEq/L",
+            "potassium": "4.0 mEq/L",
+            "chloride": "101 mEq/L",
+            "co2": "25 mEq/L",
+            "bun": "18 mg/dL",
+            "creatinine": "0.9 mg/dL",
+            "egfr": ">60 mL/min/1.73m²"
+          },
+          "lipid_panel": {
+            "total_cholesterol": "195 mg/dL",
+            "ldl_cholesterol": "115 mg/dL",
+            "hdl_cholesterol": "62 mg/dL",
+            "triglycerides": "90 mg/dL"
+          },
+          "vitamins_minerals": {
+            "vitamin_d": "28 ng/mL",
+            "vitamin_b12": "380 pg/mL",
+            "folate": "8.5 ng/mL",
+            "iron": "75 mcg/dL",
+            "ferritin": "45 ng/mL",
+            "magnesium": "1.9 mg/dL",
+            "zinc": "78 mcg/dL"
+          },
+          "hormones": {
+            "estradiol": "85 pg/mL",
+            "progesterone": "2.8 ng/mL",
+            "cortisol_am": "15 mcg/dL",
+            "thyroid_tsh": "3.2 mIU/L",
+            "thyroid_t4": "7.8 mcg/dL",
+            "thyroid_t3": "3.1 pg/mL"
+          },
+          "inflammatory_markers": {
+            "c_reactive_protein": "1.2 mg/L",
+            "esr": "15 mm/hr"
+          },
+          "women_specific": {
+            "ca_125": "18 U/mL",
+            "cea": "2.1 ng/mL"
+          }
+        },
+        "order_history": [
+          {
+            "order_id": "ORD-2025-004",
+            "order_date": "2025-08-01",
+            "total_amount": 156.83,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT002",
+                "product_name": "Complete Multivitamin for Women",
+                "quantity": 2,
+                "price": 32.95
+              },
+              {
+                "product_id": "SKIN001",
+                "product_name": "Hyaluronic Acid Serum",
+                "quantity": 1,
+                "price": 34.99
+              },
+              {
+                "product_id": "SKIN002",
+                "product_name": "Vitamin C Brightening Serum",
+                "quantity": 1,
+                "price": 42.50
+              },
+              {
+                "product_id": "VIT006",
+                "product_name": "Biotin 10,000 mcg Hair Growth",
+                "quantity": 1,
+                "price": 16.95
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-005",
+            "order_date": "2025-07-10",
+            "total_amount": 78.89,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT001",
+                "product_name": "Premium Vitamin D3 5000 IU",
+                "quantity": 1,
+                "price": 24.99
+              },
+              {
+                "product_id": "VIT005",
+                "product_name": "Magnesium Glycinate 400mg",
+                "quantity": 1,
+                "price": 21.95
+              },
+              {
+                "product_id": "SKIN004",
+                "product_name": "Sunscreen SPF 50 Broad Spectrum",
+                "quantity": 1,
+                "price": 22.95
+              },
+              {
+                "product_id": "OTC002",
+                "product_name": "Allergy Relief Loratadine 10mg",
+                "quantity": 1,
+                "price": 18.75
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-006",
+            "order_date": "2025-06-05",
+            "total_amount": 89.88,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "VIT004",
+                "product_name": "Probiotics 50 Billion CFU",
+                "quantity": 1,
+                "price": 39.99
+              },
+              {
+                "product_id": "HERB003",
+                "product_name": "Elderberry Immune Support Gummies",
+                "quantity": 2,
+                "price": 19.95
+              },
+              {
+                "product_id": "CARE002",
+                "product_name": "Thermometer Digital Oral",
+                "quantity": 1,
+                "price": 15.99
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-007",
+            "order_date": "2025-04-20",
+            "total_amount": 65.94,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "SKIN003",
+                "product_name": "Retinol Night Cream 0.5%",
+                "quantity": 1,
+                "price": 38.95
+              },
+              {
+                "product_id": "VIT003",
+                "product_name": "Omega-3 Fish Oil 1000mg",
+                "quantity": 1,
+                "price": 28.50
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-2025-016",
+            "order_date": "2025-03-15",
+            "total_amount": 97.96,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "SKIN005",
+                "product_name": "Retinol Anti-Aging Serum 2.5%",
+                "quantity": 1,
+                "price": 39.99
+              },
+              {
+                "product_id": "SKIN006",
+                "product_name": "Niacinamide 10% + Zinc Serum",
+                "quantity": 1,
+                "price": 24.99
+              },
+              {
+                "product_id": "VIT010",
+                "product_name": "Calcium Citrate with Vitamin D3",
+                "quantity": 1,
+                "price": 26.99
+              },
+              {
+                "product_id": "HERB008",
+                "product_name": "Ginkgo Biloba Extract 120mg",
+                "quantity": 1,
+                "price": 23.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 8901"
+          },
+          {
+            "order_id": "ORD-2025-026",
+            "order_date": "2025-02-10",
+            "total_amount": 72.97,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "SKIN007",
+                "product_name": "Vitamin C Serum 20% + Vitamin E",
+                "quantity": 1,
+                "price": 32.99
+              },
+              {
+                "product_id": "VIT009",
+                "product_name": "Iron Bisglycinate 25mg",
+                "quantity": 1,
+                "price": 22.95
+              },
+              {
+                "product_id": "OTC005",
+                "product_name": "Melatonin 5mg Sleep Support",
+                "quantity": 1,
+                "price": 16.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 8901"
+          },
+          {
+            "order_id": "ORD-2025-036",
+            "order_date": "2025-01-05",
+            "total_amount": 64.98,
+            "status": "Delivered",
+            "items": [
+              {
+                "product_id": "CARE007",
+                "product_name": "Essential Oil Diffuser Ultrasonic",
+                "quantity": 1,
+                "price": 34.99
+              },
+              {
+                "product_id": "HERB006",
+                "product_name": "Milk Thistle Silymarin 175mg",
+                "quantity": 1,
+                "price": 21.99
+              },
+              {
+                "product_id": "VIT012",
+                "product_name": "Zinc Picolinate 30mg",
+                "quantity": 1,
+                "price": 18.99
+              }
+            ],
+            "shipping_address": "Same as billing",
+            "payment_method": "Credit Card ending in 8901"
+          }
+        ],
+        "purchase_patterns": {
+          "total_orders": 7,
+          "total_spent": 627.45,
+          "average_order_value": 89.64,
+          "favorite_categories": ["Skincare", "Vitamin Supplements", "Herbal Supplements", "Personal Care"],
+          "purchase_frequency": "Every 3-5 weeks",
+          "preferred_brands": ["FemVital", "DermaCare", "GlowLab", "YouthRenew", "ClearSkin Pro"],
+          "seasonal_trends": "Increases skincare purchases in spring/summer, adds wellness products in winter"
+        },
+        "health_insights": {
+          "risk_factors": ["Hypothyroidism", "Perimenopause symptoms", "Slightly low iron"],
+          "recommendations": ["Continue thyroid medication", "Monitor iron levels", "Consider hormone support supplements", "Maintain skincare routine"],
+          "health_score": 78,
+          "last_health_assessment": "2025-07-15"
+        }
+      },
+      {
+        "customer_id": "CUST003",
+        "personal_info": {
+          "name": "Harold Simmons",
+          "gender": "Male",
+          "age": 72,
+          "date_of_birth": "1952-09-08",
+          "email": "<email>@email.com",
+          "phone": "<phone_number>",
+          "address": {
+            "street": "<address>",
+            "city": "Phoenix",
+            "state": "AZ",
+            "zip_code": "85001",
+            "country": "USA"
+          },
+          "occupation": "Retired Engineer",
+          "lifestyle": "Sedentary to Light Activity",
+          "fitness_level": "Low to Medium",
+          "dietary_preferences": ["Heart-healthy", "Low sodium", "Diabetic-friendly"],
+          "allergies": ["Penicillin", "Sulfa drugs"],
+          "medications": [
+            "Metformin 1000mg (Type 2 Diabetes)",
+            "Lisinopril 10mg (Hypertension)",
+            "Atorvastatin 20mg (High cholesterol)",
+            "Aspirin 81mg (Cardioprotective)",
+            "Metoprolol 50mg (Blood pressure)"
+          ],
+          "health_goals": ["Blood sugar management", "Heart health", "Bone strength", "Cognitive support", "Joint mobility"]
+        },
+        "body_composition": {
+          "height": "5'8\"",
+          "height_cm": 173,
+          "weight": "185 lbs",
+          "weight_kg": 84,
+          "bmi": 28.1,
+          "body_fat_percentage": 32.8,
+          "muscle_mass_percentage": 28.5,
+          "bone_density": "Below average (osteopenia)",
+          "metabolic_rate": 1580,
+          "waist_circumference": "38 inches",
+          "blood_pressure": "138/85 mmHg",
+          "resting_heart_rate": 75,
+          "last_measured": "2025-07-25"
+        },
+        "bloodwork_data": {
+          "test_date": "2025-07-10",
+          "lab_provider": "LabCorp",
+          "complete_blood_count": {
+            "white_blood_cells": "6.2 K/uL",
+            "red_blood_cells": "4.1 M/uL",
+            "hemoglobin": "13.5 g/dL",
+            "hematocrit": "40.2%",
+            "platelets": "245 K/uL"
+          },
+          "comprehensive_metabolic_panel": {
+            "glucose_fasting": "128 mg/dL",
+            "sodium": "142 mEq/L",
+            "potassium": "4.1 mEq/L",
+            "chloride": "103 mEq/L",
+            "co2": "23 mEq/L",
+            "bun": "22 mg/dL",
+            "creatinine": "1.2 mg/dL",
+            "egfr": "58 mL/min/1.73m²"
+          },
+          "lipid_panel": {
+            "total_cholesterol": "165 mg/dL",
+            "ldl_cholesterol": "85 mg/dL",
+            "hdl_cholesterol": "45 mg/dL",
+            "triglycerides": "175 mg/dL"
+          },
+          "diabetes_markers": {
+            "hemoglobin_a1c": "7.2%",
+            "fructosamine": "285 umol/L",
+            "c_peptide": "1.8 ng/mL"
+          },
+          "vitamins_minerals": {
+            "vitamin_d": "22 ng/mL",
+            "vitamin_b12": "320 pg/mL",
+            "folate": "6.8 ng/mL",
+            "iron": "68 mcg/dL",
+            "ferritin": "180 ng/mL",
+            "magnesium": "1.8 mg/dL",
+            "zinc": "72 mcg/dL",
+            "calcium": "9.8 mg/dL"
+          },
+          "hormones": {
+            "testosterone_total": "285 ng/dL",
+            "testosterone_free": "8.2 pg/mL",
+            "cortisol_am": "18 mcg/dL",
+            "thyroid_tsh": "4.1 mIU/L",
+            "thyroid_t4": "7.2 mcg/dL"
+          },
+          "inflammatory_markers": {
+            "c_reactive_protein": "3.2 mg/L",
+            "esr": "28 mm/hr"
+          },
+          "cardiac_markers": {
+            "nt_pro_bnp": "185 pg/mL",
+            "troponin_i": "<0.04 ng/mL"
+          },
+          "kidney_function": {
+            "microalbumin": "45 mg/g creatinine",
+            "protein_total": "0.8 g/dL"
+          }
+        },
+        "order_history": [],
+        "purchase_patterns": {
+          "total_orders": 0,
+          "total_spent": 0.00,
+          "average_order_value": 0.00,
+          "favorite_categories": [],
+          "purchase_frequency": "No purchase history",
+          "preferred_brands": [],
+          "seasonal_trends": "No data available"
+        },
+        "health_insights": {
+          "risk_factors": [
+            "Type 2 Diabetes (controlled)",
+            "Hypertension",
+            "High cholesterol (managed)",
+            "Overweight (BMI 28.1)",
+            "Osteopenia",
+            "Slightly elevated inflammatory markers",
+            "Borderline kidney function"
+          ],
+          "recommendations": [
+            "Continue diabetes management",
+            "Monitor blood pressure regularly",
+            "Increase vitamin D supplementation",
+            "Consider calcium supplementation for bone health",
+            "Regular cardiovascular exercise as tolerated",
+            "Monitor kidney function",
+            "Anti-inflammatory supplements beneficial"
+          ],
+          "health_score": 65,
+          "last_health_assessment": "2025-07-25"
+        }
+      }
+    ]
+  }
+}
