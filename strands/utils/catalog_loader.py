@@ -5,6 +5,7 @@ import asyncio
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 from tqdm import tqdm
+from urllib.parse import urlparse
 
 from services.dynamodb_service import dynamodb_service
 from services.opensearch_service import opensearch_service
@@ -265,7 +266,19 @@ class CatalogLoader:
             image_url = transformed_product['image_url']
             if isinstance(image_url, str):
                 # If it's a full S3 URL, convert it back to relative path
-                if 's3.amazonaws.com' in image_url or 's3-' in image_url:
+                parsed_url = urlparse(image_url)
+                hostname = parsed_url.hostname
+                
+                # Check if it's a valid S3 hostname using proper URL parsing
+                is_s3_url = False
+                if hostname:
+                    # Check for standard S3 hostnames
+                    if (hostname == 's3.amazonaws.com' or 
+                        hostname.endswith('.s3.amazonaws.com') or
+                        hostname.startswith('s3-') and hostname.endswith('.amazonaws.com')):
+                        is_s3_url = True
+                
+                if is_s3_url:
                     # Extract the path after /images/
                     match = re.search(r'/images/([^?]+)', image_url)
                     if match:

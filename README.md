@@ -83,35 +83,50 @@ This Guidance is optimized for **US East (N. Virginia) - us-east-1**. It can be 
 
 ## Deployment Steps
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/aws-solutions-library-samples/guidance-for-building-agentic-ai-powered-hyper-personalized-customer-experience-on-aws.git
-   cd guidance-for-building-agentic-ai-powered-hyper-personalized-customer-experience-on-aws
-   ```
+#### Step 1: Deploy CDK Infrastructure (15 min)
+```bash
+cd infrastructure
+npm i
+cdk deploy
+```
 
-2. Install infrastructure dependencies:
-   ```bash
-   cd infrastructure
-   npm install
-   ```
+> If you get a 403 error while trying to build the Docker image, run this command: `aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws`
 
-3. Deploy the infrastructure:
-   ```bash
-   cdk deploy
-   ```
-   Confirm IAM role creation when prompted.
+#### Step 2: Configure Environment Variables for AI Service 
 
-4. Load sample data:
-   ```bash
-   cd ../strands
-   python3 run_catalog_load.py
-   ```
+- Find the CDK outputs (directly from the CLI or in the AWS CloudFormation console)
+- Find the values for **AwsRegion**, **OpenSearchDomainEndpoint**, and **ReactUrl**
+- In your IDE, open the .env file inside of the **strands/** folder
+- Update the following values: 
+    - AWS REGION ... copy/paste **AwsRegion** from CDK output  
+    - OPENSEARCH_ENDPOINT ... copy/paste **OpenSearchDomainEndpoint** from CDK output 
+    - CORS_ORIGINS ... copy/paste **ReactUrl** value from CDK output 
+    - save the updated **.env** file
 
-5. Upload product images to S3:
-   ```bash
-   cd ../scripts
-   python3 upload_product_images.py --bucket-name <bucket-name-from-cdk-output>
-   ```
+#### Step 3: Re-deploy CDK stack (5 min)
+```bash
+cdk deploy
+```
+
+#### Step 4: Load Product Catalog & Customer Profiles (3 min)
+```bash
+cd ../scripts
+python3 opensearch_catalog_load.py
+```
+
+#### Step 5: Load Product Images to S3 (2 min)
+
+- Find the CDK outputs (directly from the CLI or in the AWS CloudFormation console)
+- Find the value for **S3BucketImages**, copy into the command below
+
+```bash
+python3 upload_product_images.py --images-dir "../strands/data/product-images/" --bucket-name "cxhyperpersonalizeapp-data-source-{account#}-{region}"
+```
+- *Upload 53 images to {bucket name}? (y/N)::* **y**
+
+#### Step 6: Open website
+- All done! Your application is now ready to use.
+- Open the **ReactUrl** on your web browser.
 
 ## Deployment Validation
 
