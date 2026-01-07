@@ -209,5 +209,6 @@ For any feedback, questions, or suggestions, please use the [issues tab](https:/
 
 | Name | Contact | LinkedIn |
 |------|---------|----------|
-| Ryan Dsilva | rrdsilva@ | [LinkedIn Profile](https://www.linkedin.com/in/ryan-dsilva) |
 | Jerry Tejada | tejjerry@ | [LinkedIn Profile](https://www.linkedin.com/in/jerrytejada/) |
+| Ryan Dsilva | rrdsilva@ | [LinkedIn Profile](https://www.linkedin.com/in/ryan-dsilva) |
+| Eugene Mu | eugenemu@ | [LinkedIn Profile](https://www.linkedin.com/in/eugenemu) |
