@@ -55,6 +55,7 @@ class DynamoDBService:
             self.customers_table = self.dynamodb_resource.Table(settings.DYNAMODB_CUSTOMERS_TABLE)
             self.products_table = self.dynamodb_resource.Table(settings.DYNAMODB_PRODUCTS_TABLE)
             self.search_history_table = self.dynamodb_resource.Table(settings.DYNAMODB_SEARCH_HISTORY_TABLE)
+            self.orders_table = self.dynamodb_resource.Table(settings.DYNAMODB_ORDERS_TABLE)
             
             return True
             
@@ -318,6 +319,121 @@ class DynamoDBService:
             raise
         except Exception as e:
             logger.error(f"Unexpected error in batch write: {str(e)}")
+            raise
+
+    async def create_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new order in DynamoDB"""
+        try:
+            self._ensure_clients()
+            
+            now = datetime.now().isoformat()
+            order_data['order_date'] = now
+            order_data['created_at'] = now
+            order_data['updated_at'] = now
+            
+            # Set default status if not provided
+            if 'status' not in order_data:
+                order_data['status'] = 'pending'
+
+            item = self._prepare_item_for_dynamodb(order_data)
+
+            self.orders_table.put_item(
+                Item=item,
+                ConditionExpression='attribute_not_exists(order_id)'
+            )
+            logger.info(f"Order created successfully: {order_data['order_id']}")
+            return self._convert_decimals(order_data)
+            
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                logger.error(f"Order already exists: {order_data.get('order_id')}")
+                raise ValueError("Order with this ID already exists")
+            else:
+                logger.error(f"Failed to create order: {str(e)}")
+                raise
+        except Exception as e:
+            logger.error(f"Unexpected error creating order: {str(e)}")
+            raise
+
+    async def get_order(self, order_id: str) -> Optional[Dict[str, Any]]:
+        """Get order by ID"""
+        try:
+            self._ensure_clients()
+            
+            response = self.orders_table.get_item(
+                Key={'order_id': order_id}
+            )
+            
+            if 'Item' in response:
+                logger.info(f"Order retrieved: {order_id}")
+                return self._convert_decimals(response['Item'])
+            else:
+                logger.warning(f"Order not found: {order_id}")
+                return None
+                
+        except ClientError as e:
+            logger.error(f"Failed to get order {order_id}: {str(e)}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error getting order: {str(e)}")
+            raise
+
+    async def get_customer_orders(self, customer_id: str, limit: int = 50) -> List[Dict[str, Any]]:
+        """Get orders for a specific customer using GSI"""
+        try:
+            self._ensure_clients()
+            
+            response = self.orders_table.query(
+                IndexName='customer-index',
+                KeyConditionExpression='customer_id = :customer_id',
+                ExpressionAttributeValues={
+                    ':customer_id': customer_id
+                },
+                Limit=limit,
+                ScanIndexForward=False  # Sort by order_date descending (newest first)
+            )
+            
+            orders = [self._convert_decimals(item) for item in response.get('Items', [])]
+            logger.info(f"Retrieved {len(orders)} orders for customer {customer_id}")
+            return orders
+                
+        except ClientError as e:
+            logger.error(f"Failed to get orders for customer {customer_id}: {str(e)}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error getting customer orders: {str(e)}")
+            raise
+
+    async def update_order_status(self, order_id: str, status: str) -> Dict[str, Any]:
+        """Update order status"""
+        try:
+            self._ensure_clients()
+            
+            response = self.orders_table.update_item(
+                Key={'order_id': order_id},
+                UpdateExpression='SET #status = :status, updated_at = :updated_at',
+                ExpressionAttributeNames={'#status': 'status'},
+                ExpressionAttributeValues={
+                    ':status': status,
+                    ':updated_at': datetime.now().isoformat()
+                },
+                ReturnValues='ALL_NEW',
+                ConditionExpression='attribute_exists(order_id)'
+            )
+            
+            updated_order = self._convert_decimals(response['Attributes'])
+            logger.info(f"Order status updated: {order_id} -> {status}")
+            return updated_order
+            
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                logger.error(f"Order not found for update: {order_id}")
+                raise ValueError("Order not found")
+            else:
+                logger.error(f"Failed to update order status: {str(e)}")
+                raise
+        except Exception as e:
+            logger.error(f"Unexpected error updating order status: {str(e)}")
             raise
 
     async def health_check(self) -> Dict[str, str]:

@@ -27,8 +27,8 @@ interface CatalogData {
   products: CatalogProduct[];
 }
 
-// Import the healthcare product catalog data with proper typing
-import catalogDataImport from '../data/healthcare_product_catalog.json';
+// Import the product catalog data with proper typing
+import catalogDataImport from '../data/product_catalog.json';
 
 const catalogData: CatalogData = catalogDataImport as CatalogData;
 
@@ -51,7 +51,7 @@ export const getProductById = (productId: string): Product | null => {
 
 /**
  * Map a catalog product to the standardized Product interface
- * @param catalogProduct - Product from the healthcare catalog
+ * @param catalogProduct - Product from the catalog
  * @returns Standardized Product object
  */
 const mapCatalogProductToStandardProduct = (catalogProduct: CatalogProduct): Product => {

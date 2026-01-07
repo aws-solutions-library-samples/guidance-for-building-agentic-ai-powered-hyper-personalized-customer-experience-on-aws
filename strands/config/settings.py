@@ -34,6 +34,10 @@ class Settings:
         return os.getenv('DYNAMODB_SEARCH_HISTORY_TABLE', 'search_history')
 
     @property
+    def DYNAMODB_ORDERS_TABLE(self) -> str:
+        return os.getenv('DYNAMODB_ORDERS_TABLE', 'orders')
+
+    @property
     def OPENSEARCH_ENDPOINT(self) -> Optional[str]:
         # First try environment variable, then SSM parameter
         endpoint = os.getenv('OPENSEARCH_ENDPOINT')
@@ -43,7 +47,7 @@ class Settings:
     
     @property
     def OPENSEARCH_INDEX_NAME(self) -> str:
-        return os.getenv('OPENSEARCH_INDEX_NAME', 'healthcare-products')
+        return os.getenv('OPENSEARCH_INDEX_NAME', 'products')
 
     @property
     def BEDROCK_MODEL_ID(self) -> str:

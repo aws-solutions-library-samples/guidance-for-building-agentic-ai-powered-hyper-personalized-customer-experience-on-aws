@@ -375,7 +375,7 @@ def main():
     
     if success:
         print(f"\n🎉 Catalog load completed successfully!")
-        print(f"   Your healthcare product data is now loaded and ready!")
+        print(f"   Your product data is now loaded and ready!")
         print(f"   Frontend URL: https://{outputs.get('ReactUrl', 'Not found').replace('https://', '')}")
     else:
         print(f"\n❌ Catalog load failed.")

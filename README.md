@@ -14,18 +14,20 @@
 6. [Next Steps](#next-steps)
 7. [Cleanup](#cleanup)
 8. [Notices](#notices)
+9. [Security](#security)
+10. [License](#license)
 
 ***Optional***
 
-8. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations)
-9. [Revisions](#revisions)
-10. [Authors](#authors)
+11. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations)
+12. [Revisions](#revisions)
+13. [Authors](#authors)
 
 ## Overview
 
 The CX Hyper Personalization is an AI-powered product recommendation platform providing personalized product suggestions based on customer profiles and intelligent search. Built for healthcare retail, the multi-agent AI capabilities translate to other industries like Automotive and Retail CPG.
 
-![Architecture Diagram](./arch.png)
+![Architecture Diagram](./docs/diagrams/architecture.png) 
 
 ### Cost
 
@@ -73,9 +75,8 @@ These deployment instructions are optimized to best work on **macOS, Linux, or W
 
 This Guidance uses AWS CDK. If you are using AWS CDK for the first time, bootstrap your environment:
 
-```bash
+bash
 cdk bootstrap aws://ACCOUNT-ID/REGION
-```
 
 ### Supported Regions
 
@@ -101,6 +102,10 @@ cdk deploy
     - AWS REGION ... copy/paste **AwsRegion** from CDK output  
     - OPENSEARCH_ENDPOINT ... copy/paste **OpenSearchDomainEndpoint** from CDK output 
     - CORS_ORIGINS ... copy/paste **ReactUrl** value from CDK output 
+    - DOMAIN_AGENTS
+      - Here you can select which domain specialist agents you want to enable. 
+      - This repository has domain specialists built for Healthcare & Automotive as examples. 
+      - The frontend is built so for Healthcare, so copy/paste **bloodwork_analyzer,body_composition_analyzer** into this field
     - save the updated **.env** file
 
 #### Step 3: Re-deploy CDK stack (5 min)
@@ -127,6 +132,7 @@ python3 upload_product_images.py --images-dir "../strands/data/product-images/" 
 #### Step 6: Open website
 - All done! Your application is now ready to use.
 - Open the **ReactUrl** on your web browser.
+   
 
 ## Deployment Validation
 
@@ -135,14 +141,14 @@ python3 upload_product_images.py --images-dir "../strands/data/product-images/" 
 2. Verify ECS services are running in the Amazon ECS console.
 
 3. Test the API health endpoint:
-   ```bash
+bash
    curl https://<cloudfront-domain>/health
-   ```
+   
    
    Expected response:
-   ```json
+json
    {"status": "healthy", "services": {"dynamodb": "healthy", "opensearch": "healthy", "agentic": "healthy"}}
-   ```
+   
 
 ## Running the Guidance
 
@@ -165,17 +171,29 @@ python3 upload_product_images.py --images-dir "../strands/data/product-images/" 
 ## Cleanup
 
 1. Empty the S3 bucket:
-   ```bash
+bash
    aws s3 rm s3://<bucket-name> --recursive
-   ```
+   
 
 2. Delete the stack:
-   ```bash
+bash
    cd infrastructure
    cdk destroy
-   ```
+   
 
 3. Verify all resources are deleted in the CloudFormation console.
+
+## Notices
+
+*Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided "as is" without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
+
+## Security
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## License
+
+This library is licensed under the MIT-0 License. See the LICENSE file.
 
 ## FAQ, known issues, additional considerations, and limitations
 
@@ -186,10 +204,6 @@ python3 upload_product_images.py --images-dir "../strands/data/product-images/" 
 - The default OpenSearch configuration uses 3 nodes. Scale as needed for production workloads.
 
 For any feedback, questions, or suggestions, please use the [issues tab](https://github.com/aws-solutions-library-samples/guidance-for-building-agentic-ai-powered-hyper-personalized-customer-experience-on-aws/issues).
-
-## Notices
-
-*Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided "as is" without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
 
 ## Authors
 

@@ -197,7 +197,7 @@ async def run_full_data_load(load_products: bool = True, load_customers: bool = 
         # Product results
         if load_products and 'product_result' in result:
             product_result = result['product_result']
-            print(f"\n🏥 Product Results:")
+            print(f"\n📦 Product Results:")
             print(f"   Total Products: {product_result.get('total_products', 0)}")
             print(f"   Products Loaded: {result.get('products_loaded', False)}")
             
@@ -248,10 +248,10 @@ async def run_full_data_load(load_products: bool = True, load_customers: bool = 
     except FileNotFoundError as e:
         print(f"\n❌ ERROR: Catalog file not found")
         print(f"   {str(e)}")
-        print(f"\n💡 Make sure the healthcare_product_catalog.json file exists in:")
-        print(f"   - ./data/healthcare_product_catalog.json")
-        print(f"   - ../data/healthcare_product_catalog.json")
-        print(f"   - data/healthcare_product_catalog.json")
+        print(f"\n💡 Make sure the product_catalog.json file exists in:")
+        print(f"   - ./data/product_catalog.json")
+        print(f"   - ../data/product_catalog.json")
+        print(f"   - data/product_catalog.json")
         return False
         
     except Exception as e:
@@ -272,9 +272,9 @@ async def check_prerequisites(skip_opensearch_health: bool = False):
     # Check if catalog file exists
     from pathlib import Path
     possible_paths = [
-        Path("./data/healthcare_product_catalog.json"),
-        Path("../data/healthcare_product_catalog.json"),
-        Path("data/healthcare_product_catalog.json"),
+        Path("./data/product_catalog.json"),
+        Path("../data/product_catalog.json"),
+        Path("data/product_catalog.json"),
     ]
     
     catalog_found = False
@@ -339,7 +339,7 @@ def get_user_input(prompt: str, default: str = "", non_interactive: bool = False
 async def main():
     """Main function"""
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Healthcare Data Loader')
+    parser = argparse.ArgumentParser(description='Product Data Loader')
     parser.add_argument('--non-interactive', '-n', action='store_true', 
                        help='Run in non-interactive mode with defaults')
     parser.add_argument('--products-only', action='store_true',
@@ -353,7 +353,7 @@ async def main():
     
     args = parser.parse_args()
     
-    print("🏥 Healthcare Data Loader")
+    print("📦 Product Data Loader")
     print("=" * 80)
     
     # Check VPC connectivity first

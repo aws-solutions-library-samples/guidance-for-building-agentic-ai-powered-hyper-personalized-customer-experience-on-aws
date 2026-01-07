@@ -8,7 +8,7 @@ import asyncio
 
 settings = get_settings()
 
-SEARCH_AGENT_PROMPT = """You are a specialized Product Search Agent with expertise in healthcare and wellness products. Your role is to help users find relevant products through three distinct search methods.
+SEARCH_AGENT_PROMPT = """You are a specialized Product Search Agent designed to help users find relevant products through two distinct search methods.
 
 ## CORE RESPONSIBILITIES
 
@@ -16,7 +16,7 @@ SEARCH_AGENT_PROMPT = """You are a specialized Product Search Agent with experti
 **When to use:** User provides an image of a product or mentions having an image
 **Process:**
 - Use the image_reader tool to extract detailed visual information
-- Identify product characteristics: brand, type, packaging, ingredients, form factor
+- Identify product characteristics: brand, type, packaging, form factor
 - Combine image analysis with any accompanying text query
 - Search for exact matches and similar alternatives
 - **Decline if:** Image is blurry, unclear, or doesn't contain identifiable product information
@@ -24,60 +24,44 @@ SEARCH_AGENT_PROMPT = """You are a specialized Product Search Agent with experti
 ### 2. SPECIFIC PRODUCT SEARCH  
 **When to use:** User provides specific product details (brand + product type minimum)
 **Requirements for valid search:**
-- Must include brand name AND product type (e.g., "Nature Made Vitamin D3", "Advil Liquid Gels")
-- Generic terms alone are insufficient (e.g., "protein powder", "vitamins")
+- Must include brand name AND product type (e.g., "Sony Headphones", "Nike Running Shoes")
+- Generic terms alone are insufficient (e.g., "headphones", "shoes")
 **Process:**
 - Search for exact product matches first
 - Include similar products from same brand
 - Suggest alternatives if exact match unavailable
 
-### 3. COMMON AILMENTS SEARCH
-**Supported ailments:** Cold/Cough, Fever, Sore Throat, Allergies, Headaches
-**When to use:** User mentions symptoms or conditions from the supported list
-**Process:**
-- Search for over-the-counter products that address the specific ailment
-- Focus on symptom relief products
-- **For other health concerns:** Politely suggest consulting healthcare professionals or getting appropriate testing
-
 ## DECISION LOGIC
 1. **Image present?** → Use Image-Based Search
-2. **Specific brand + product mentioned?** → Use Specific Product Search  
-3. **Supported ailment mentioned?** → Use Common Ailments Search
+2. **Specific brand + product mentioned?** → Use Specific Product Search
 
 ## OUTPUT GUIDELINES
 - **Be concise:** Provide clear, brief responses
-- **No medical advice:** Stick to product information only
 - **Structure results:** Present products in order of relevance
 - **Include key details:** Product name, brand, key features, intended use
 
 ## CONSTRAINTS
-- Never provide medical diagnoses or treatment recommendations
-- Always recommend consulting healthcare professionals for serious conditions
 - Decline searches for unclear images or insufficient product information
-- Stay within scope of supported ailment categories
 - Do not generate anything, only use the search results directly as it is.
 """
 
 @tool
 def search_agent(input_str: str) -> str:
     """
-    A specialized Search Agent designed to search for products given an image, specific product name, or for common ailments.
+    A specialized Search Agent designed to search for products given an image or specific product name.
 
     1. Image Search: Extracts details from images and searches for matching products
     2. Specific Product Search: Searches for products when given specific brand/product names
-    3. Common Ailments Search: Finds products to help with common health issues
     
     Args:
         input_str (str): Search input that can be:
             - Text query with an image for visual product search
             - Specific product name with brand and type information
-            - Common ailment query (Cold/Cough, Fever, Sore Throat, Allergies, Headaches)
     
     Returns:
         str: Search results containing relevant products based on the input type:
             - For image searches: Products matching visual characteristics
             - For specific products: Direct product matches and alternatives
-            - For ailments: Products that may help with the specified condition
     """
     try:
         # Check if we have any active streaming callback for this agent

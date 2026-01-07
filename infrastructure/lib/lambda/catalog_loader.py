@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Lambda function to load the healthcare product catalog after CDK deployment
+    Lambda function to load the product catalog after CDK deployment
     """
     try:
         request_type = event['RequestType']
@@ -50,25 +50,11 @@ def load_catalog(properties: Dict[str, Any]) -> Dict[str, Any]:
     # Install required packages
     try:
         # Use static python3 path instead of sys.executable for security
-        # Use a more secure temp directory approach
-        import tempfile
-        import shutil
-        
-        # Create a secure temporary directory
-        temp_dir = tempfile.mkdtemp(prefix='lambda_packages_')
-        
         subprocess.check_call([
             "/usr/bin/python3", "-m", "pip", "install", 
-            "opensearch-py", "requests-aws4auth", "tqdm", "--target", temp_dir
+            "opensearch-py", "requests-aws4auth", "tqdm", "--target", "/tmp"
         ], shell=False)
-        
-        # Insert the secure temp directory into path
-        sys.path.insert(0, temp_dir)
-        
-        # Register cleanup function (though Lambda container will be destroyed anyway)
-        import atexit
-        atexit.register(lambda: shutil.rmtree(temp_dir, ignore_errors=True))
-        
+        sys.path.insert(0, '/tmp')
     except Exception as e:
         logger.warning(f"Failed to install packages: {e}")
     
@@ -76,13 +62,13 @@ def load_catalog(properties: Dict[str, Any]) -> Dict[str, Any]:
     opensearch_endpoint = properties.get('OPENSEARCH_ENDPOINT')
     region = properties.get('AWS_REGION', 'us-west-2')
     products_table = properties.get('PRODUCTS_TABLE', 'products')
-    index_name = properties.get('INDEX_NAME', 'healthcare-products')
+    index_name = properties.get('INDEX_NAME', 'products')
     bedrock_model = properties.get('BEDROCK_MODEL', 'anthropic.claude-3-7-sonnet-20250219-v1:0')
     
     logger.info(f"Configuration: endpoint={opensearch_endpoint}, region={region}, table={products_table}")
     
-    # Load the healthcare product catalog
-    catalog_data = load_healthcare_catalog()
+    # Load the product catalog
+    catalog_data = load_catalog()
     logger.info(f"Loaded {len(catalog_data)} products from catalog")
     
     # Process products and generate embeddings
@@ -129,9 +115,9 @@ def load_catalog(properties: Dict[str, Any]) -> Dict[str, Any]:
         'status': 'success'
     }
 
-def load_healthcare_catalog() -> List[Dict[str, Any]]:
-    """Load the healthcare product catalog from embedded data"""
-    # Embedded healthcare product catalog
+def load_catalog() -> List[Dict[str, Any]]:
+    """Load the product catalog from embedded data"""
+    # Embedded product catalog
     return [
         {
             "id": "1",

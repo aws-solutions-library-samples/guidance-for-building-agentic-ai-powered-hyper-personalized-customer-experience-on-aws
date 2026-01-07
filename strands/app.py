@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handle startup and shutdown events"""
-    logger.info("Starting CX VHS Healthcare Product Catalog API")
+    logger.info("Starting CX VHS Product Catalog API")
     try:
         services = {}
         try:
@@ -67,11 +67,11 @@ async def lifespan(app: FastAPI):
     
     yield
 
-    logger.info("Shutting down CX VHS Healthcare Product Catalog API")
+    logger.info("Shutting down CX VHS Product Catalog API")
 
 app = FastAPI(
-    title='CX VHS - Healthcare Product Catalog API',
-    description='AI-powered healthcare product search and customer management platform',
+    title='CX VHS - Product Catalog API',
+    description='AI-powered product search and customer management platform',
     version='1.0.0',
     debug=settings.DEBUG,
     lifespan=lifespan,
@@ -105,7 +105,7 @@ async def extract_recommendations_from_text(text: str, user_id: str) -> Recommen
         extraction_prompt = f"""
         Based on the recent conversation and response: "{text}"
         
-        Extract any specific healthcare product recommendations that were mentioned.
+        Extract any specific product recommendations that were mentioned.
         Return ONLY a valid JSON object in this exact format:
         {{
             "recommendations": [
@@ -187,6 +187,32 @@ async def health_check():
         raise HTTPException(status_code=500, detail="Health check failed")
 
 
+def _ensure_relative_image_urls(products):
+    """Ensure all product image URLs are relative paths for CloudFront"""
+    import re
+    
+    for product in products:
+        if 'image_url' in product and product['image_url']:
+            image_url = product['image_url']
+            
+            # If it's a full S3 URL, convert it back to relative path
+            if 's3.amazonaws.com' in image_url or 's3-' in image_url:
+                # Extract the path after /images/
+                match = re.search(r'/images/([^?]+)', image_url)
+                if match:
+                    product['image_url'] = f"/images/{match.group(1)}"
+                    logger.info(f"Converted S3 URL to relative path: {image_url} -> {product['image_url']}")
+                else:
+                    # Fallback: ensure it starts with /images/
+                    if not image_url.startswith('/images/'):
+                        filename = image_url.split('/')[-1] if '/' in image_url else image_url
+                        product['image_url'] = f"/images/{filename}"
+            # Ensure relative paths start with /images/
+            elif not image_url.startswith('/images/') and not image_url.startswith('http'):
+                product['image_url'] = f"/images/{image_url}"
+    
+    return products
+
 @app.post('/search/keyword', response_model=SearchResponse)
 async def keyword_search(request: SearchRequest):
     """Perform keyword-based product search"""
@@ -197,6 +223,9 @@ async def keyword_search(request: SearchRequest):
             filters=request.filters,
             size=request.size
         )
+
+        # Ensure all image URLs are relative paths for CloudFront
+        processed_results = _ensure_relative_image_urls(results.get('results', []))
 
         search_history = {
             "search_id": str(uuid.uuid4()),
@@ -215,7 +244,7 @@ async def keyword_search(request: SearchRequest):
         return SearchResponse(
             query=request.query,
             total_hits=results.get('total_hits', 0),
-            results=results.get('results', []),
+            results=processed_results,
             **{"from": request.from_},
             size=request.size,
             took_ms=results.get('took_ms')
@@ -236,10 +265,13 @@ async def semantic_search(request: SemanticSearchRequest):
             size=request.size
         )
 
+        # Ensure all image URLs are relative paths for CloudFront
+        processed_results = _ensure_relative_image_urls(results.get('results', []))
+
         return SearchResponse(
             query=request.query,
             total_hits=results.get('total_hits', 0),
-            results=results.get('results', []),
+            results=processed_results,
             **{"from": request.from_},
             size=request.size,
             took_ms=results.get('took_ms')
@@ -310,7 +342,7 @@ async def websocket_chat_endpoint(websocket: WebSocket, user_id: str):
     # Send welcome message
     welcome_response = WebSocketResponse(
         type="system",
-        message=f"Welcome! User {user_id} connected to the Hyperpersonal Health Assistant 🩺",
+        message=f"Welcome! User {user_id} connected to the Hyperpersonal Assistant 🤖",
         user_id="system"
     )
     success = await manager.send_personal_message(welcome_response.model_dump_json(), websocket)

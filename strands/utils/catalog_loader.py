@@ -5,7 +5,6 @@ import asyncio
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 from tqdm import tqdm
-from urllib.parse import urlparse
 
 from services.dynamodb_service import dynamodb_service
 from services.opensearch_service import opensearch_service
@@ -21,12 +20,12 @@ class CatalogLoader:
         
         # Try multiple possible paths for the catalog file
         possible_paths = [
-            current_dir / "data" / "healthcare_product_catalog.json",  # strands/data/
-            Path("/app/data/healthcare_product_catalog.json"),  # Docker container path
-            Path("./data/healthcare_product_catalog.json"),   # Current directory
-            Path("../data/healthcare_product_catalog.json"),  # Original path
-            Path("data/healthcare_product_catalog.json"),     # From project root
-            Path("strands/data/healthcare_product_catalog.json"),  # From project root to strands/data
+            current_dir / "data" / "product_catalog.json",  # strands/data/
+            Path("/app/data/product_catalog.json"),  # Docker container path
+            Path("./data/product_catalog.json"),   # Current directory
+            Path("../data/product_catalog.json"),  # Original path
+            Path("data/product_catalog.json"),     # From project root
+            Path("strands/data/product_catalog.json"),  # From project root to strands/data
         ]
         
         self.catalog_file_path = None
@@ -37,7 +36,7 @@ class CatalogLoader:
         
         if not self.catalog_file_path:
             # Default to the strands/data path if none found
-            self.catalog_file_path = current_dir / "data" / "healthcare_product_catalog.json"
+            self.catalog_file_path = current_dir / "data" / "product_catalog.json"
 
         # Try multiple possible paths for the customer profiles file
         customer_possible_paths = [
@@ -266,19 +265,7 @@ class CatalogLoader:
             image_url = transformed_product['image_url']
             if isinstance(image_url, str):
                 # If it's a full S3 URL, convert it back to relative path
-                parsed_url = urlparse(image_url)
-                hostname = parsed_url.hostname
-                
-                # Check if it's a valid S3 hostname using proper URL parsing
-                is_s3_url = False
-                if hostname:
-                    # Check for standard S3 hostnames
-                    if (hostname == 's3.amazonaws.com' or 
-                        hostname.endswith('.s3.amazonaws.com') or
-                        hostname.startswith('s3-') and hostname.endswith('.amazonaws.com')):
-                        is_s3_url = True
-                
-                if is_s3_url:
+                if 's3.amazonaws.com' in image_url or 's3-' in image_url:
                     # Extract the path after /images/
                     match = re.search(r'/images/([^?]+)', image_url)
                     if match:

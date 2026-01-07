@@ -1,5 +1,5 @@
 # --- Stage 1: Build Vite app ---
-FROM public.ecr.aws/docker/library/node:20-slim as build
+FROM public.ecr.aws/docker/library/node:20-slim AS build
 
 WORKDIR /app
 COPY package*.json ./
@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y \
     make \
     g++ \
     && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user and set ownership
+RUN useradd -m -r appuser && \
+    chown -R appuser:appuser /app
+USER appuser
 
 # Install dependencies with clean slate and fix esbuild issues
 RUN npm cache clean --force && \
@@ -28,10 +33,6 @@ RUN npm run build
 # --- Stage 2: Serve with Nginx ---
 FROM nginx:stable-alpine
 
-# Create a non-root user to run nginx
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -S appuser -u 1001 -G appgroup
-
 # Clear default static content
 RUN rm -rf /usr/share/nginx/html/*
 
@@ -41,17 +42,10 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Optional: custom Nginx config (for SPA routing)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Change ownership of nginx directories to the non-root user
-RUN chown -R appuser:appgroup /var/cache/nginx /var/log/nginx /etc/nginx/conf.d /usr/share/nginx/html && \
-    touch /var/run/nginx.pid && \
-    chown appuser:appgroup /var/run/nginx.pid
-
-# Switch to non-root user
-USER appuser
-
-# Add health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:80/ || exit 1
-
 EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl --fail http://localhost:80/ || exit 1
+
 CMD ["nginx", "-g", "daemon off;"]

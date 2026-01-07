@@ -219,7 +219,7 @@ class OpenSearchService:
             raise
 
     async def create_index(self, index_name: Optional[str] = None) -> Dict[str, Any]:
-        """Create OpenSearch index with proper mappings for healthcare products"""
+        """Create OpenSearch index with proper mappings for products"""
         self._ensure_client()
         
         if not index_name:

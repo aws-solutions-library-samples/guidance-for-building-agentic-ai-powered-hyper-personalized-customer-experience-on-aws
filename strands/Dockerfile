@@ -20,7 +20,7 @@ COPY config/ ./config/
 COPY models/ ./models/
 COPY services/ ./services/
 COPY utils/ ./utils/
-COPY data/healthcare_product_catalog.json ./data/
+COPY data/product_catalog.json ./data/
 COPY data/customer_profiles.json ./data/
 COPY .env .
 
@@ -28,12 +28,11 @@ COPY .env .
 RUN useradd -m appuser
 USER appuser
 
-# Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
 # Expose the port the app runs on
 EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl --fail http://localhost:8000/ || exit 1
 
 # Command to run the application with Uvicorn
 # - port: 8000

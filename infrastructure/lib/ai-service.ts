@@ -1,6 +1,7 @@
 // ai-service.ts
 import { Duration } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import * as cdk from "aws-cdk-lib";
 import * as cdk_nag from 'cdk-nag';
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
@@ -38,22 +39,63 @@ export class AiService extends Construct {
       retention: logs.RetentionDays.ONE_WEEK,
     });
 
+    // Custom managed policy for ECS task execution (replacing AWS managed policy)
+    const ecsTaskExecutionPolicy = new iam.ManagedPolicy(this, "EcsTaskExecutionPolicy", {
+      description: "Custom managed policy providing ECS task execution permissions",
+      statements: [
+        new iam.PolicyStatement({
+          sid: "ECRPermissions",
+          effect: iam.Effect.ALLOW,
+          actions: [
+            "ecr:BatchCheckLayerAvailability",
+            "ecr:GetDownloadUrlForLayer",
+            "ecr:BatchGetImage"
+          ],
+          resources: [
+            `arn:aws:ecr:*:${cdk.Stack.of(this).account}:repository/*`
+          ]
+        }),
+        new iam.PolicyStatement({
+          sid: "ECRAuthToken",
+          effect: iam.Effect.ALLOW,
+          actions: ["ecr:GetAuthorizationToken"],
+          resources: ["*"]
+        }),
+        new iam.PolicyStatement({
+          sid: "CloudWatchLogs",
+          effect: iam.Effect.ALLOW,
+          actions: [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          resources: [
+            `arn:aws:logs:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:log-group:/aws/ecs/*`,
+            `arn:aws:logs:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:log-group:*:log-stream:ai-service/*`
+          ]
+        })
+      ]
+    });
+
+    // Suppress CDK-Nag for custom ECS task execution policy
+    cdk_nag.NagSuppressions.addResourceSuppressions(ecsTaskExecutionPolicy, [
+      { 
+        id: "AwsSolutions-IAM5", 
+        reason: "ECS Task Execution requires wildcard permissions for ECR repositories in the account, ECR authentication token, and CloudWatch logs for ECS services. Resources are scoped to the current AWS account and region where applicable.",
+        appliesTo: [
+          `Resource::arn:aws:ecr:*:${cdk.Stack.of(this).account}:repository/*`,
+          'Resource::*',
+          `Resource::arn:aws:logs:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:log-group:/aws/ecs/*`,
+          `Resource::arn:aws:logs:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:log-group:*:log-stream:ai-service/*`
+        ]
+      }
+    ]);
+
     // Roles
     const executionRole = new iam.Role(this, "AiExecRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonECSTaskExecutionRolePolicy"),
-      ],
+      managedPolicies: [ecsTaskExecutionPolicy],
     });
-
-    // Suppress CDK-Nag for AWS managed policy usage
-    cdk_nag.NagSuppressions.addResourceSuppressions(executionRole, [
-      { 
-        id: "AwsSolutions-IAM4", 
-        reason: "ECS Task Execution Role requires AmazonECSTaskExecutionRolePolicy for container image pulling and CloudWatch logging. This is the standard AWS managed policy for ECS task execution.",
-        appliesTo: ['Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy']
-      }
-    ]);
 
     const taskRole = new iam.Role(this, "AiTaskRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
@@ -83,8 +125,9 @@ export class AiService extends Construct {
         "arn:aws:dynamodb:*:*:table/customers",
         "arn:aws:dynamodb:*:*:table/products",
         "arn:aws:dynamodb:*:*:table/search_history",
-        "arn:aws:dynamodb:*:*:table/products/index/*"
-
+        "arn:aws:dynamodb:*:*:table/orders",
+        "arn:aws:dynamodb:*:*:table/products/index/*",
+        "arn:aws:dynamodb:*:*:table/orders/index/*"
       ],
     }));
     taskRole.addToPolicy(new iam.PolicyStatement({
@@ -98,7 +141,7 @@ export class AiService extends Construct {
 
       ],
       resources: [
-        "arn:aws:es:*:*:domain/healthcare-products-domain/*"
+        "arn:aws:es:*:*:domain/products-domain/*"
       ],
     }));
 
@@ -119,13 +162,15 @@ export class AiService extends Construct {
           'Resource::arn:aws:dynamodb:*:*:table/customers',
           'Resource::arn:aws:dynamodb:*:*:table/products', 
           'Resource::arn:aws:dynamodb:*:*:table/search_history',
-          'Resource::arn:aws:dynamodb:*:*:table/products/index/*'
+          'Resource::arn:aws:dynamodb:*:*:table/orders',
+          'Resource::arn:aws:dynamodb:*:*:table/products/index/*',
+          'Resource::arn:aws:dynamodb:*:*:table/orders/index/*'
         ]
       },
       { 
         id: "AwsSolutions-IAM5", 
-        reason: "OpenSearch domain ARN requires region wildcard for multi-region deployment flexibility. The domain name is fixed and scoped to the specific healthcare-products-domain only.",
-        appliesTo: ['Resource::arn:aws:es:*:*:domain/healthcare-products-domain/*']
+        reason: "OpenSearch domain ARN requires region wildcard for multi-region deployment flexibility. The domain name is fixed and scoped to the specific products-domain only.",
+        appliesTo: ['Resource::arn:aws:es:*:*:domain/products-domain/*']
       }
     ], true); // Apply recursively to child resources including DefaultPolicy
 
@@ -233,7 +278,7 @@ export class AiService extends Construct {
     cdk_nag.NagSuppressions.addResourceSuppressions(executionRole, [
       { 
         id: "AwsSolutions-IAM5", 
-        reason: "ECS Task Execution Role requires wildcard permissions for ECR image pulling, CloudWatch logging, and SSM parameter access. These permissions are added by CDK grants and are necessary for ECS task execution. See: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html",
+        reason: "ECS Task Execution Role requires wildcard permissions for SSM parameter access. These permissions are added by CDK grants and are necessary for ECS task execution to access configuration parameters. See: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html",
         appliesTo: ['Resource::*']
       }
     ], true); // Apply recursively to child resources including DefaultPolicy

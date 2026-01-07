@@ -19,7 +19,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.541.0",

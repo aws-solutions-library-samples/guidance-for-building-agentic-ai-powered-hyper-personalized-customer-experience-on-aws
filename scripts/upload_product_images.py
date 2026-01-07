@@ -3,7 +3,7 @@
 Product Image Uploader Script
 
 This script uploads product images from a local directory to an S3 bucket
-for use with the healthcare product catalog.
+for use with the product catalog.
 
 Usage:
     python upload_product_images.py --images-dir /path/to/images --bucket-name your-bucket-name
@@ -55,7 +55,7 @@ class ProductImageUploader:
     def load_product_catalog(self, catalog_path: str) -> Set[str]:
         """Load product IDs from the catalog file."""
         try:
-            with open(catalog_path, 'r', encoding='utf-8') as f:
+            with open(catalog_path, 'r') as f:
                 catalog = json.load(f)
             
             product_ids = set()
@@ -173,7 +173,7 @@ def main():
     parser = argparse.ArgumentParser(description='Upload product images to S3 bucket')
     parser.add_argument('--images-dir', required=True, help='Directory containing product images')
     parser.add_argument('--bucket-name', required=True, help='S3 bucket name')
-    parser.add_argument('--catalog-path', default='../strands/data/healthcare_product_catalog.json', 
+    parser.add_argument('--catalog-path', default='../strands/data/product_catalog.json', 
                        help='Path to product catalog JSON file')
     parser.add_argument('--aws-profile', help='AWS profile to use (optional)')
     parser.add_argument('--dry-run', action='store_true', 
@@ -181,7 +181,7 @@ def main():
     
     args = parser.parse_args()
     
-    print("🏥 Healthcare Product Image Uploader")
+    print("Product Image Uploader")
     print("=" * 40)
     
     # Initialize uploader

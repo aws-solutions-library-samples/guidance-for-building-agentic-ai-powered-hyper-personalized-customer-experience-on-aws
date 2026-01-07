@@ -1,6 +1,6 @@
-# CX VHS - Healthcare Product Catalog API
+# CX VHS - Product Catalog API
 
-A simplified AI-powered healthcare product search and customer management platform built with FastAPI, AWS services, and modern Python practices.
+A simplified AI-powered product search and customer management platform built with FastAPI, AWS services, and modern Python practices.
 
 ## Features
 
@@ -68,7 +68,7 @@ Once running, visit:
 
 ### Catalog Management
 - `POST /catalog/upload` - Upload product catalog
-- `POST /catalog/load-sample` - Load sample healthcare catalog
+- `POST /catalog/load-sample` - Load sample product catalog
 
 ### Search
 - `POST /search/keyword` - Keyword-based product search
@@ -121,7 +121,7 @@ DYNAMODB_SEARCH_HISTORY_TABLE=search_history
 
 # OpenSearch
 OPENSEARCH_ENDPOINT=https://your-collection.aoss.amazonaws.com
-OPENSEARCH_INDEX_NAME=healthcare-products
+OPENSEARCH_INDEX_NAME=products-catalog
 
 # Bedrock
 BEDROCK_MODEL_ID=us.anthropic.claude-3-7-sonnet-20250219-v1:0
@@ -213,4 +213,4 @@ Set `DEBUG=true` in environment variables for detailed logging.
 
 ## License
 
-This project is part of the CX VHS healthcare platform POC.
+This project is part of the CX VHS platform POC.

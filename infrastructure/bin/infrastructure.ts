@@ -14,4 +14,5 @@ new CxAppStack(app, "CxHyperPersonalizeApp", {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,
   },
+  description : "Guidance for Building Agentic AI-Powered Hyper-Personalized Customer Experience on AWS (SO9660)"
 });
