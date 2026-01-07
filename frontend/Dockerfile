@@ -33,6 +33,9 @@ RUN npm run build
 # --- Stage 2: Serve with Nginx ---
 FROM nginx:stable-alpine
 
+# Apply security patches for vulnerabilities
+RUN apk update && apk upgrade libxml2 libpng c-ares busybox
+
 # Clear default static content
 RUN rm -rf /usr/share/nginx/html/*
 
