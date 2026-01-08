@@ -91,8 +91,10 @@ async def check_vpc_access():
             
         # Check if we can resolve VPC DNS (another indicator)
         try:
-            # Try to resolve a VPC endpoint pattern
-            socket.gethostbyname('vpc-test.us-east-1.es.amazonaws.com')
+            # Get current AWS region from environment or boto3 session
+            region = os.getenv('AWS_DEFAULT_REGION') or os.getenv('AWS_REGION') or boto3.Session().region_name or 'us-east-1'
+            # Try to resolve a VPC endpoint pattern using the current region
+            socket.gethostbyname(f'vpc-test.{region}.es.amazonaws.com')
             return True
         except:
             pass
