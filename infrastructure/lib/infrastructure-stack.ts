@@ -840,8 +840,8 @@ export class CxAppStack extends cdk.Stack {
     }
 
     private addTags() {
-        cdk.Tags.of(this).add("project", "CxHyperPersonalizeApp")
-        cdk.Tags.of(this).add("repo", "https://gitlab.aws.dev/tejjerry/cx-hyper-personalize-genai")
+        cdk.Tags.of(this).add("project", "Guidance for Building Hyper-Personalized Customer Experience powered by Agentic AI on AWS")
+        cdk.Tags.of(this).add("repo", "https://github.com/aws-solutions-library-samples/guidance-for-building-agentic-ai-powered-hyper-personalized-customer-experience-on-aws")
     }
 
     private addOutputs(domain: opensearch.Domain) {
