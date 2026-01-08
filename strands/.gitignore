@@ -202,3 +202,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 test_data/
+
+# misc
+.DS_Store
