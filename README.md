@@ -82,6 +82,14 @@ cdk bootstrap aws://ACCOUNT-ID/REGION
 
 This Guidance is optimized for **US East (N. Virginia) - us-east-1**. It can be deployed to other regions where Amazon Bedrock and Amazon OpenSearch Service are available.
 
+### Security Disclaimer 
+
+The application deployed by this guidance is publicly accessible without authentication. This means:
+- Anyone with the CloudFront distribution URL can access your application
+- Customer profiles and product recommendations are not protected by login requirements. Login profiles are simulated to demonstrate hyper-personalized recommendations based on synthetic user data
+- The application is intended for demonstration purposes only
+- **For production use, you must implement proper authentication and authorization (e.g., Amazon Cognito)**
+
 ## Deployment Steps
 
 #### Step 1: Deploy CDK Infrastructure (20 min)

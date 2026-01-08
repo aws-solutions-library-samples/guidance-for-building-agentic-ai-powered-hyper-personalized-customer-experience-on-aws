@@ -17,6 +17,7 @@ import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
+import * as wafv2 from 'aws-cdk-lib/aws-wafv2';
 
 // AI Service Construct
 import { AiService } from "./ai-service";
@@ -390,6 +391,110 @@ export class CxAppStack extends cdk.Stack {
             },
         })
 
+        // Create WAF v2 Web ACL with AWS Managed Rules for CloudFront
+        // Note: For now, we'll only create WAF if we're in us-east-1 region
+        // CloudFront WAF must be created in us-east-1 region
+        let webAclArn: string | undefined;
+        
+        if (cdk.Stack.of(this).region === 'us-east-1') {
+            const webAcl = new wafv2.CfnWebACL(this, "CloudFrontWebACL", {
+                name: `${cdk.Stack.of(this).stackName}-cloudfront-waf`,
+                description: "WAF Web ACL for CloudFront distribution with AWS Managed Rules",
+                scope: "CLOUDFRONT", // Required for CloudFront
+                defaultAction: {
+                    allow: {} // Allow requests by default, block based on rules
+                },
+                rules: [
+                    {
+                        name: "AWSManagedRulesCommonRuleSet",
+                        priority: 1,
+                        overrideAction: {
+                            none: {} // Use the rule group's configured action
+                        },
+                        statement: {
+                            managedRuleGroupStatement: {
+                                vendorName: "AWS",
+                                name: "AWSManagedRulesCommonRuleSet"
+                            }
+                        },
+                        visibilityConfig: {
+                            sampledRequestsEnabled: true,
+                            cloudWatchMetricsEnabled: true,
+                            metricName: "CommonRuleSetMetric"
+                        }
+                    },
+                    {
+                        name: "AWSManagedRulesKnownBadInputsRuleSet",
+                        priority: 2,
+                        overrideAction: {
+                            none: {}
+                        },
+                        statement: {
+                            managedRuleGroupStatement: {
+                                vendorName: "AWS",
+                                name: "AWSManagedRulesKnownBadInputsRuleSet"
+                            }
+                        },
+                        visibilityConfig: {
+                            sampledRequestsEnabled: true,
+                            cloudWatchMetricsEnabled: true,
+                            metricName: "KnownBadInputsRuleSetMetric"
+                        }
+                    },
+                    {
+                        name: "AWSManagedRulesAmazonIpReputationList",
+                        priority: 3,
+                        overrideAction: {
+                            none: {}
+                        },
+                        statement: {
+                            managedRuleGroupStatement: {
+                                vendorName: "AWS",
+                                name: "AWSManagedRulesAmazonIpReputationList"
+                            }
+                        },
+                        visibilityConfig: {
+                            sampledRequestsEnabled: true,
+                            cloudWatchMetricsEnabled: true,
+                            metricName: "AmazonIpReputationListMetric"
+                        }
+                    },
+                    {
+                        name: "AWSManagedRulesAnonymousIpList",
+                        priority: 4,
+                        overrideAction: {
+                            none: {}
+                        },
+                        statement: {
+                            managedRuleGroupStatement: {
+                                vendorName: "AWS",
+                                name: "AWSManagedRulesAnonymousIpList"
+                            }
+                        },
+                        visibilityConfig: {
+                            sampledRequestsEnabled: true,
+                            cloudWatchMetricsEnabled: true,
+                            metricName: "AnonymousIpListMetric"
+                        }
+                    }
+                ],
+                visibilityConfig: {
+                    sampledRequestsEnabled: true,
+                    cloudWatchMetricsEnabled: true,
+                    metricName: `${cdk.Stack.of(this).stackName}WebAcl`
+                }
+            });
+            
+            webAclArn = webAcl.attrArn;
+        } else {
+            // When not in us-east-1, we cannot create CloudFront WAF in the same stack
+            // Print a warning message
+            new cdk.CfnOutput(this, "WAFWarning", {
+                value: "WAF for CloudFront can only be created in us-east-1 region. Deploy this stack in us-east-1 to enable WAF protection.",
+                description: "WAF deployment warning"
+            });
+        }
+
         // CloudFront distribution
         this.Distribution = new cloudfront.Distribution(this, "Distribution", {
             defaultBehavior: {
@@ -420,6 +525,7 @@ export class CxAppStack extends cdk.Stack {
             minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
             comment: `${cdk.Stack.of(this).stackName}-${cdk.Stack.of(this).region}-cf-distribution`,
             enableLogging: false,
+            webAclId: webAclArn, // Associate WAF with CloudFront (only if in us-east-1)
         })
 
         // Modify the CloudFront distribution to use OAC for S3 origin
@@ -444,10 +550,9 @@ export class CxAppStack extends cdk.Stack {
             }
         }))
 
-        // Suppress CDK-Nag for ALB access logging
+        // Suppress CDK-Nag for CloudFront distribution
         cdk_nag.NagSuppressions.addResourceSuppressions(this.Distribution, [
             { id: "AwsSolutions-CFR1", reason: "Geo restrictions need to be applied when deployed in prod." },
-            { id: "AwsSolutions-CFR2", reason: "CloudFront should be integrated with WAF when deploying in production." },
             { id: "AwsSolutions-CFR3", reason: "CloudFront access logging is not enabled for demo purposes." },
             { id: "AwsSolutions-CFR4", reason: "We are not leveraging custom certificates." },
             { id: "AwsSolutions-CFR5", reason: "We are not leveraging custom certificates." },
