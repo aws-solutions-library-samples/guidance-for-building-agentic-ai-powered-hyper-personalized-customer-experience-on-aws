@@ -84,7 +84,7 @@ This Guidance is optimized for **US East (N. Virginia) - us-east-1**. It can be 
 
 ## Deployment Steps
 
-#### Step 1: Deploy CDK Infrastructure (15 min)
+#### Step 1: Deploy CDK Infrastructure (20 min)
 ```bash
 cd infrastructure
 npm i
