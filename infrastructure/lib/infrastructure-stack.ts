@@ -408,8 +408,8 @@ export class CxAppStack extends cdk.Stack {
             },
             additionalBehaviors: {
                 "/images/*": {
-                    origin: new origins.HttpOrigin(bucket.bucketDomainName, {
-                        protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
+                    origin: new origins.S3Origin(bucket, {
+                        originAccessIdentity: undefined, // Use OAC instead of OAI
                     }),
                     viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                     allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
