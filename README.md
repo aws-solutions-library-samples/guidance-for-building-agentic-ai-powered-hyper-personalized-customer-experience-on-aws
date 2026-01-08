@@ -30,7 +30,9 @@ The CX Hyper Personalization is an AI-powered product recommendation platform pr
 ![Architecture Diagram](./assets/architecture.png) 
 ![Demo 2](./assets/demo-2.gif) 
 
-### Cost
+Watch the [full walkthrough](./assets/demo-walkthrough.mp4). 
+
+## Cost
 
 _You are responsible for the cost of the AWS services used while running this Guidance. As of September 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) Region is approximately **$2,117.76** per month._
 
