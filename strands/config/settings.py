@@ -19,7 +19,7 @@ class Settings:
 
     @property
     def AWS_REGION(self) -> str:
-        return os.getenv('AWS_REGION', 'us-west-2')
+        return os.getenv('AWS_REGION', 'us-east-1')
 
     @property
     def DYNAMODB_CUSTOMERS_TABLE(self) -> str:

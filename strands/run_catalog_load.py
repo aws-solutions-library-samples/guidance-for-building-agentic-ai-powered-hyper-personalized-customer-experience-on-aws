@@ -92,7 +92,7 @@ async def check_vpc_access():
         # Check if we can resolve VPC DNS (another indicator)
         try:
             # Try to resolve a VPC endpoint pattern
-            socket.gethostbyname('vpc-test.us-west-2.es.amazonaws.com')
+            socket.gethostbyname('vpc-test.us-east-1.es.amazonaws.com')
             return True
         except:
             pass

@@ -110,7 +110,7 @@ Key environment variables:
 
 ```bash
 # AWS Configuration
-AWS_REGION=us-west-2
+AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 
@@ -124,7 +124,7 @@ OPENSEARCH_ENDPOINT=https://your-collection.aoss.amazonaws.com
 OPENSEARCH_INDEX_NAME=products-catalog
 
 # Bedrock
-BEDROCK_MODEL_ID=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+BEDROCK_MODEL_ID=us.anthropic.claude-haiku-4-5-20251001-v1:0
 
 # Application
 DEBUG=true

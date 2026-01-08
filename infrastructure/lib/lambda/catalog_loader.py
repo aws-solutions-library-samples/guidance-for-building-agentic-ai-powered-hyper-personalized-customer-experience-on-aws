@@ -60,7 +60,7 @@ def load_catalog(properties: Dict[str, Any]) -> Dict[str, Any]:
     
     # Get configuration from properties
     opensearch_endpoint = properties.get('OPENSEARCH_ENDPOINT')
-    region = properties.get('AWS_REGION', 'us-west-2')
+    region = properties.get('AWS_REGION', 'us-east-1')
     products_table = properties.get('PRODUCTS_TABLE', 'products')
     index_name = properties.get('INDEX_NAME', 'products')
     bedrock_model = properties.get('BEDROCK_MODEL', 'anthropic.claude-3-7-sonnet-20250219-v1:0')
