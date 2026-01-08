@@ -1,6 +1,8 @@
 import json
 import boto3
 import logging
+import urllib.request
+import urllib.parse
 from botocore.exceptions import ClientError
 
 logger = logging.getLogger()
@@ -70,15 +72,17 @@ def create_service_linked_role(event, context):
         
     except ClientError as e:
         error_code = e.response['Error']['Code']
-        if error_code == 'InvalidInput':
+        error_message = e.response['Error']['Message']
+        
+        if error_code == 'InvalidInput' and 'already exists' in error_message:
             # Role already exists
             logger.info(f"Service-linked role for {service_name} already exists")
             return send_response(event, context, 'SUCCESS', 
                                f"Service-linked role for {service_name} already exists",
                                {'ServiceLinkedRoleName': role_name})
         else:
-            logger.error(f"Failed to create service-linked role: {e}")
-            return send_response(event, context, 'FAILED', str(e))
+            logger.error(f"Failed to create service-linked role: {error_code} - {error_message}")
+            return send_response(event, context, 'FAILED', f"{error_code}: {error_message}")
 
 def delete_service_linked_role(event, context):
     """
@@ -90,7 +94,7 @@ def delete_service_linked_role(event, context):
 
 def send_response(event, context, response_status, reason, response_data=None):
     """
-    Send response back to CloudFormation
+    Send response back to CloudFormation using urllib.request instead of urllib3
     """
     if response_data is None:
         response_data = {}
@@ -109,21 +113,25 @@ def send_response(event, context, response_status, reason, response_data=None):
         'Data': response_data
     }
     
-    json_response_body = json.dumps(response_body)
+    json_response_body = json.dumps(response_body).encode('utf-8')
     
-    logger.info(f"Response body: {json_response_body}")
-    
-    headers = {
-        'content-type': '',
-        'content-length': str(len(json_response_body))
-    }
+    logger.info(f"Response body: {json_response_body.decode('utf-8')}")
     
     try:
-        import urllib3
-        http = urllib3.PoolManager()
-        response = http.request('PUT', response_url, body=json_response_body, headers=headers)
-        logger.info(f"Status code: {response.status}")
-        return response_body
+        req = urllib.request.Request(
+            response_url,
+            data=json_response_body,
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Length': str(len(json_response_body))
+            },
+            method='PUT'
+        )
+        
+        with urllib.request.urlopen(req) as response:
+            logger.info(f"Status code: {response.getcode()}")
+            return response_body
+            
     except Exception as e:
         logger.error(f"Failed to send response: {e}")
         raise e
