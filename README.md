@@ -27,7 +27,7 @@
 
 The CX Hyper Personalization is an AI-powered product recommendation platform providing personalized product suggestions based on customer profiles and intelligent search. Built for healthcare retail, the multi-agent AI capabilities translate to other industries like Automotive and Retail CPG.
 
-![Architecture Diagram](./docs/diagrams/architecture.png) 
+![Architecture Diagram](./architecture.png) 
 
 ### Cost
 
