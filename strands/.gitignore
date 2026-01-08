@@ -135,6 +135,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+#.env
 .venv
 env/
 venv/
@@ -201,5 +202,3 @@ __marimo__/
 .streamlit/secrets.toml
 
 test_data/
-
-.env
